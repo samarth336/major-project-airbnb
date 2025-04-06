@@ -48,14 +48,13 @@ app.get("/listings", wrapAsync(async (req, res) => {
     res.render("listings/index.ejs", { allListings });
 }));
 
-//new route
+// New Route
 app.get("/listings/new", wrapAsync((req, res) => {
     res.render("listings/new.ejs");
 }));
 
 
-//create route
-
+// Create Route
 app.post("/listings", validateListing, wrapAsync(async (req, res) => {
     const { listing } = req.body;
 
@@ -78,7 +77,7 @@ app.get("/listings/:id", wrapAsync(async (req, res) => {
     res.render("listings/show.ejs", { listing });
 }));
 
-// edit route
+// Edit Route
 
 app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
     let { id } = req.params;
@@ -94,7 +93,7 @@ app.put("/listings/:id", validateListing, wrapAsync(async (req, res) => {
     res.redirect(`/listings/${id}`);
 }));
 
-// delete Route
+// Delete route
 app.delete("/listings/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id)
