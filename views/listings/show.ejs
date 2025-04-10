@@ -1,15 +1,15 @@
 <% layout('/layouts/boilerplate.ejs') %>
     <div class="row">
         <div class="col-8 offset-3">
-            <h2>Listing Details:</h2>
+            <h2><b>
+                <%= listing.title %>
+                </b></h2>
         </div>
         <div class="card col-6 offset-3 show-card">
             <img src="<%= listing.image.url%>" class="card-img-top show-img" alt="listing">
             <div class="card-body">
                 <p class="card-text">
-                    <b>
-                    <%= listing.title %>
-                    </b> <br>
+                    <br>
                     <%= listing.description %> <br>
                     <% if (listing.price) { %>
                         &#8377; <%= listing.price.toLocaleString("en-IN") %>/night
@@ -25,6 +25,22 @@
             <a href="/listings/<%=listing._id%>/edit" class="btn edit-btn col-1 offset-3">Edit</a>
             <form action="/listings/<%=listing._id%>?_method=DELETE" method="post">
                 <button class="btn btn-dark offset-3">Delete</button>
+            </form>
+        </div>
+        <div  class="col-8 offset-3 mb-3">
+            <hr>
+            <h4>Leave a Review</h4>
+            <form action="/listings/<%=listing._id%>/reviews" method="POST">
+                <div class="mb-3 mt-3">
+                    <label for="rating"  class="form-label">Rating</label>
+                    <input type="range" id="rating" name="review[rating]" min="1" max="5" >
+                </div>
+                <div>
+                    <label for="comment"  class="form-label">Comments</label>
+                    <textarea name="review[comment]" id="comment" col="30" rows="5" class="form-control"></textarea>
+                </div>
+                <br>
+                <button class="btn btn-outline-dark">Submit</button>
             </form>
         </div>
     </div>

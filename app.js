@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const Listing = require("../major project backend/models/listing");
+const Review = require("../major project backend/models/review");
 const path = require("path");
 const methodOverride = require("method-override");
 const MONGO_URL = "mongodb://127.0.0.1:27017/wonderlust";
@@ -100,6 +101,20 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
     // console.log(deletedListing);
     res.redirect("/listings");
 }));
+
+// Reviews Route
+// POST Route
+
+app.post("/listings/:id/reviews", wrapAsync(async (req, res) => {
+    let { id } = req.params;
+    let listing = await Listing.findById(id);
+    let newRewiew = new Review(req.body.review);
+    listing.reviews.push(newRewiew);  
+    await newRewiew.save();
+    await listing.save();
+    res.redirect(`/listings/${id}`);
+}));
+
 // app.get("/testListing",async (req,res)=>{
 //     let sampleListing=new Listing({
 //         title:"My new Villa",
