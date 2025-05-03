@@ -4,18 +4,10 @@ const Listing = require("../models/listing");
 const Review = require("../models/review"); // Ensure Review model is imported
 const wrapAsync = require('../utils/wrapAsync');
 const ExpressError = require('../utils/ExpressError');
-const { reviewSchema } = require('../schema.js'); // Import reviewSchema
+const { validateReview } = require('../middleware.js'); // Ensure validateReview is imported
 
 // Define validateReview middleware
-const validateReview = (req, res, next) => {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',');
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
-    }
-};
+
 
 // Reviews Route
 // POST Route

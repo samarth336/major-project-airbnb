@@ -8,25 +8,23 @@
         <div class="card col-6 offset-3 show-card listing-card">
             <img src="<%= listing.image.url%>" class="card-img-top show-img" alt="listing">
             <div class="card-body">
-                <p class="card-text">
-                    <br>
-                    <%= listing.description %> <br>
-                        <% if (listing.price) { %>
-                            &#8377; <%= listing.price.toLocaleString("en-IN") %>/night
-                                <% } else { %>
-                                    Price not available
-                                    <% } %> <br>
-                                        <%= listing.location %> <br>
-                                            <%= listing.country %> <br>
-                </p>
+                <p class="card-text"> Owned by <b><i><%= listing.owner.username %></i></b></p>
+                <p> <%= listing.description %> </p>
+                <p><% if (listing.price) { %>&#8377; <%= listing.price.toLocaleString("en-IN") %>/night </p>
+                <p><% } else { %> Price not available<% } %> </p>
+                <p><%= listing.location %> </p>
+                <p><%= listing.country %> </p>
             </div>
         </div>
+     
         <div class="btns">
             <a href="/listings/<%=listing._id%>/edit" class="btn edit-btn col-1 offset-3">Edit</a>
             <form action="/listings/<%=listing._id%>?_method=DELETE" method="post">
                 <button class="btn btn-dark offset-3">Delete</button>
             </form>
         </div>
+
+
         <div class="col-8 offset-3 mb-3">
             <hr>
             <h4>Leave a Review</h4>
