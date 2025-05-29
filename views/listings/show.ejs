@@ -50,7 +50,8 @@
             <% for(review of listing.reviews) { %>
                 <div class="card col-5 mb-3 ms-3">
                     <div class="card-body">
-                        <h5 class="card-title">Jhon Doe</h5>
+                        <!-- Replace line 53 with this to display the author's username -->
+                        <h5 class="card-title">@<%= review.author ? review.author.username : 'Unknown User' %></h5>
                         <p class="card-text">
                             <%= review.comment%>
                         </p>

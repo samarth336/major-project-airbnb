@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing");
-const Review = require("../models/review"); // Ensure Review model is imported
+const Review = require("../models/review"); 
 const wrapAsync = require('../utils/wrapAsync');
 const ExpressError = require('../utils/ExpressError');
-const { validateReview } = require('../middleware.js'); // Ensure validateReview is imported
+const { validateReview, isLoggedIn, isReviewAuthor } = require('../middleware.js'); 
 
-// Define validateReview middleware
-
-
-// Reviews Route
-// POST Route
-router.post("/", validateReview, wrapAsync(async (req, res) => {
+// POST Route - Add isLoggedIn middleware to ensure only logged-in users can post reviews
+router.post("/", isLoggedIn, validateReview, wrapAsync(async (req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
     let newReview = new Review(req.body.review);
+    
+    // Set the author to the current logged-in user
+    newReview.author = req.user._id;
+    
     listing.reviews.push(newReview);
     await newReview.save();
     await listing.save();
@@ -22,11 +22,11 @@ router.post("/", validateReview, wrapAsync(async (req, res) => {
     res.redirect(`/listings/${id}`);
 }));
 
-// DELETE Route
-router.delete("/:reviewId", wrapAsync(async (req, res) => {
+// DELETE Route - Add authorization check
+router.delete("/:reviewId", isLoggedIn,isReviewAuthor, wrapAsync(async (req, res) => {
     let { id, reviewId } = req.params;
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    await Review.findByIdAndDelete(reviewId); // Fix typo: Listing -> Review
+    await Review.findByIdAndDelete(reviewId);
     req.flash("success","Review Deleted!");
     res.redirect(`/listings/${id}`);
 }));
