@@ -1,4 +1,8 @@
 <% layout('/layouts/boilerplate.ejs') %>
+<script>
+    const mapToken="<%= process.env.MAP_TOKEN %>";
+    const listing=<%- JSON.stringify(listing) %>;
+</script>
     <div class="row">
         <div class="col-8 offset-3">
             <h2><b>
@@ -8,15 +12,27 @@
         <div class="card col-6 offset-3 show-card listing-card">
             <img src="<%= listing.image.url%>" class="card-img-top show-img" alt="listing">
             <div class="card-body">
-                <p class="card-text"> Owned by <b><i><%= listing.owner.username %></i></b></p>
-                <p> <%= listing.description %> </p>
-                <p><% if (listing.price) { %>&#8377; <%= listing.price.toLocaleString("en-IN") %>/night </p>
-                <p><% } else { %> Price not available<% } %> </p>
-                <p><%= listing.location %> </p>
-                <p><%= listing.country %> </p>
+                <p class="card-text"> Owned by <b><i>
+                            <%= listing.owner.username %>
+                        </i></b></p>
+                <p>
+                    <%= listing.description %>
+                </p>
+                <p>
+                    <% if (listing.price) { %>&#8377; <%= listing.price.toLocaleString("en-IN") %>/night
+                </p>
+                <p>
+                    <% } else { %> Price not available<% } %>
+                </p>
+                <p>
+                    <%= listing.location %>
+                </p>
+                <p>
+                    <%= listing.country %>
+                </p>
             </div>
         </div>
-     
+
         <div class="btns">
             <a href="/listings/<%=listing._id%>/edit" class="btn edit-btn col-1 offset-3">Edit</a>
             <form action="/listings/<%=listing._id%>?_method=DELETE" method="post">
@@ -29,9 +45,23 @@
             <hr>
             <h4>Leave a Review</h4>
             <form action="/listings/<%=listing._id%>/reviews" method="POST" novalidate class="needs-validation">
+                <!-- <dreview[rating] -->
                 <div class="mb-3 mt-3">
                     <label for="rating" class="form-label">Rating</label>
-                    <input type="range" id="rating" name="review[rating]" min="1" max="5">
+                    <fieldset class="starability-slot">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                            aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
                 </div>
                 <div>
                     <label for="comment" class="form-label">Comments</label>
@@ -45,26 +75,36 @@
                 <button class="btn btn-outline-dark">Submit</button>
             </form>
             <hr>
-            <p><b>All Reviews</b></p>
-            <div class="row">
-            <% for(review of listing.reviews) { %>
-                <div class="card col-5 mb-3 ms-3">
-                    <div class="card-body">
-                        <!-- Replace line 53 with this to display the author's username -->
-                        <h5 class="card-title">@<%= review.author ? review.author.username : 'Unknown User' %></h5>
-                        <p class="card-text">
-                            <%= review.comment%>
-                        </p>
-                        <p class="card-text">
-                            <%= review.rating%> Stars
-                        </p>
-                        <form class="mb-3" action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
-                            <button class="btn btn-sm btn-dark">Delete</button>
-                        </form>
-                    </div>
+            <%if(listing.reviews.length> 0) {%>
+                <div class="row">
+                    <p><b>All Reviews</b></p>
+                    <% for(review of listing.reviews) { %>
+                        <div class="card col-5 mb-3 ms-3">
+                            <div class="card-body">
+                                <!-- Replace line 53 with this to display the author's username -->
+                                <h5 class="card-title">@<%= review.author ? review.author.username : 'Unknown User' %>
+                                </h5>
+                                <p class="starability-result" data-rating="<%= review.rating%>">
+                                </p>
+                                <p class="card-text">
+                                    <%= review.comment%>
+                                </p>
+                                <form class="mb-3"
+                                    action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-sm btn-dark">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% } %>
                 </div>
-                <% } %>
-            </div>
+                <%}%>
         </div>
-    </div>
-    <br>
+        <div class="col-8 offset-3 mb-3">
+            <h3>Where you'll be</h3>
+            <div id="map">
+
+            </div>        </div>
+    </div> <br>
+
+<script src="/javascript/map.js"></script>

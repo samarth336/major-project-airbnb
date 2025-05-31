@@ -111,3 +111,11 @@ body{
     padding-left: 0 ;
     padding-right: 0;
 }
+
+/* MAP */
+
+#map{
+    height: 50vh;
+    width: 100%;
+    border-radius: 1.5rem;
+}
